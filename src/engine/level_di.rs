@@ -1,0 +1,36 @@
+use std::{
+    ptr::{addr_of, null},
+    sync::Once,
+};
+
+use super::{c_base_camera::CBaseCamera, c_level::CLevel};
+use crate::{engine::ENGINE_HANDLE, GetProcAddress};
+
+#[derive(Debug, Clone, Copy, PartialEq, PartialOrd)]
+#[repr(C)]
+pub(crate) struct LevelDI {
+    __: [u8; 0x8],
+    pub(crate) level_p: *mut CLevel,
+}
+
+impl LevelDI {
+    #[allow(unused)]
+    pub(crate) unsafe fn get_active_camera(&mut self, n: i32) -> *mut CBaseCamera {
+        type GetActiveCamera = unsafe extern "system" fn(*mut LevelDI, i32) -> *mut CBaseCamera;
+
+        static mut PROC: isize = 0;
+        static mut PROC_PTR: *const GetActiveCamera = null();
+
+        static ONCE: Once = Once::new();
+
+        ONCE.call_once(|| {
+            PROC = GetProcAddress(
+                ENGINE_HANDLE as isize,
+                "?GetActiveCamera@ILevel@@QEBAPEAVIBaseCamera@@XZ\0".as_ptr(),
+            );
+            PROC_PTR = addr_of!(PROC) as *const GetActiveCamera;
+        });
+
+        (*PROC_PTR)(self, n)
+    }
+}
