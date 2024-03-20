@@ -37,7 +37,7 @@ pub(crate) unsafe fn main(ui: &hudhook::imgui::Ui) {
 
     ui.checkbox("锁定生命(LOCK HP)", &mut *addr_of_mut!(LOCK_HP_SWITCH));
 
-    ui.checkbox("自瞄圆(AIM CIRCLE)", &mut *addr_of_mut!(AIM_CIRCLE_SWITCH));
+    ui.checkbox("自瞄范围(AIM RANGE)", &mut *addr_of_mut!(AIM_CIRCLE_SWITCH));
 
     ui.checkbox("自瞄(AIM)", &mut *addr_of_mut!(AIM_SWITCH));
 }
