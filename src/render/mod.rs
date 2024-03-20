@@ -1,11 +1,15 @@
 pub(crate) mod background;
 pub(crate) mod menu;
 
+use std::ptr::{addr_of_mut, null};
+
 use hudhook::imgui::ImColor32;
 
 use self::background::bone::init_bone_list;
+use crate::{FindWindowA, GetAsyncKeyState, GetCursorPos, ScreenToClient, POINT};
 
-static mut IS_SHOW_UI: bool = false;
+static mut IS_SHOW_UI: bool = true;
+static mut WINDOW: isize = 0;
 
 pub(crate) const COLOR_RED: ImColor32 = hudhook::imgui::ImColor32::from_rgb(255, 0, 0);
 
@@ -31,6 +35,8 @@ impl hudhook::ImguiRenderLoop for RenderLoop {
             set_font(_ctx, 20.0);
 
             init_bone_list();
+
+            WINDOW = FindWindowA("techland_game_class".as_ptr(), null());
         }
     }
 
@@ -42,7 +48,28 @@ impl hudhook::ImguiRenderLoop for RenderLoop {
 
             background::frame(ui);
 
-            if !IS_SHOW_UI {
+            if IS_SHOW_UI {
+                if GetAsyncKeyState(0x14) != 0 {
+                    static mut MOUSE_POS: POINT = POINT {
+                        x: 0,
+                        y: 0,
+                    };
+
+                    GetCursorPos(addr_of_mut!(MOUSE_POS));
+                    ScreenToClient(WINDOW, addr_of_mut!(MOUSE_POS));
+
+                    (*hudhook::imgui::sys::igGetIO()).MousePos.x = MOUSE_POS.x as f32;
+                    (*hudhook::imgui::sys::igGetIO()).MousePos.y = MOUSE_POS.y as f32;
+                    (*hudhook::imgui::sys::igGetIO()).MouseDrawCursor = true;
+
+                    if GetAsyncKeyState(0x1) != 0 {
+                        (*hudhook::imgui::sys::igGetIO()).MouseDown[0] = true;
+                    } else {
+                        (*hudhook::imgui::sys::igGetIO()).MouseDown[0] = false;
+                    }
+                }
+            } else {
+                (*hudhook::imgui::sys::igGetIO()).MouseDrawCursor = false;
                 return;
             }
 

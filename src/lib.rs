@@ -10,9 +10,9 @@ unsafe extern "system" fn DllMain(
 ) -> i32 {
     if ul_reason_for_call == 1 {
         std::thread::spawn(move || unsafe {
-            // debug_mode();
-
             engine::init();
+
+            std::thread::sleep(std::time::Duration::from_secs(5));
 
             render::init(h_module);
         });
@@ -26,13 +26,16 @@ pub(crate) type HMODULE = isize;
 pub(crate) type PCSTR = *const u8;
 // pub(crate) type FARPROC = unsafe extern "system" fn() -> isize;
 pub(crate) type FARPROC = isize;
-// pub(crate) type BOOL = i32;
+pub(crate) type BOOL = i32;
 
 #[link(name = "user32")]
 extern "system" {
     pub(crate) fn GetAsyncKeyState(vKey: i32) -> u16;
+    fn GetCursorPos(lppoint: *mut POINT) -> BOOL;
+
+    pub(crate) fn ScreenToClient(hwnd: isize, lppoint: *mut POINT) -> BOOL;
     // pub(crate) fn IsIconic(hWnd: isize) -> i32;
-    // pub(crate) fn FindWindowW(lpClassName: *const u16, lpWindowName: *const u16) -> isize;
+    pub(crate) fn FindWindowA(lpClassName: *const u8, lpWindowName: *const u8) -> isize;
 }
 
 #[link(name = "kernel32")]
@@ -41,6 +44,14 @@ extern "system" {
     pub(crate) fn GetProcAddress(hmodule: HMODULE, lpprocname: PCSTR) -> FARPROC;
 
     // pub(crate) fn DisableThreadLibraryCalls(hlibmodule: HMODULE) -> BOOL;
+}
+
+#[derive(Debug, Clone, Copy, Default, PartialEq, PartialOrd)]
+#[repr(C)]
+#[repr(C)]
+pub struct POINT {
+    pub x: i32,
+    pub y: i32,
 }
 
 #[derive(Debug, Clone, Copy, Default, PartialEq, PartialOrd)]
