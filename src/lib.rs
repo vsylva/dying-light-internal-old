@@ -48,7 +48,6 @@ extern "system" {
 
 #[derive(Debug, Clone, Copy, Default, PartialEq, PartialOrd)]
 #[repr(C)]
-#[repr(C)]
 pub struct POINT {
     pub x: i32,
     pub y: i32,

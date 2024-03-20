@@ -1,8 +1,8 @@
 use std::ptr::addr_of_mut;
 
 pub(crate) static mut DISTANCE_SWITCH: bool = false;
-pub(crate) static mut VISIBLE_LINE_SWITCH: bool = false;
 pub(crate) static mut BONE_SWITCH: bool = false;
+pub(crate) static mut VISIBLE_LINE_SWITCH: bool = false;
 pub(crate) static mut AIM_CIRCLE_SWITCH: bool = false;
 pub(crate) static mut AIM_SWITCH: bool = false;
 pub(crate) static mut LOCK_AMMO_SWITCH: bool = false;
