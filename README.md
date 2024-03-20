@@ -1,6 +1,4 @@
-# dying light internal hack
-
-Dx11
+# dying light(dx11) internal hack
 
 ---
 
@@ -9,13 +7,10 @@ Dx11
 ![menu](res/menu.png)
 
 ---
-
 Rewritten in Rust https://github.com/TKazer/DyingLight_Internal
+
+Authorized by the original author
 
 ```rust
 cargo +stable build --release
 ```
-
----
-
-经得原作者授权
