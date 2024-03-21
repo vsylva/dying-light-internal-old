@@ -1,8 +1,9 @@
 [package]
 name = "dying_light_hack"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 license = "MIT"
+publish = false
 
 [lib]
 crate-type = ["cdylib"]

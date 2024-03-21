@@ -4,5 +4,11 @@ use super::{inventory::Inventory, List};
 #[repr(C)]
 pub(crate) struct InventoryAmmo {
     __: [u8; 0x40],
-    pub(crate) inventory_list: List<Inventory>,
+    inventory_list: List<Inventory>,
+}
+
+impl InventoryAmmo {
+    pub(crate) unsafe fn get_inventory_list(&mut self) -> *mut List<Inventory> {
+        &mut self.inventory_list
+    }
 }

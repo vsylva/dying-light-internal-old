@@ -4,5 +4,5 @@ use super::camera_fpp_di::CameraFPPDI;
 #[repr(C)]
 pub(crate) struct CameraManagerDI {
     __: [u8; 0x50],
-    pub(crate) camera_p: *mut CameraFPPDI,
+    pub(crate) camera_fpp_di_p: *mut CameraFPPDI,
 }

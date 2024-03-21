@@ -1,89 +1,4 @@
-use std::{
-    collections::LinkedList,
-    ptr::{addr_of, addr_of_mut},
-};
-
-use hudhook::imgui::ImColor32;
-
-use crate::{
-    engine::{c_model_object::CModelObject, ENGINE},
-    Vec2,
-    Vec3,
-};
-
-pub(crate) unsafe fn draw_bone(
-    ui: &hudhook::imgui::Ui,
-    color: ImColor32,
-    c_model_obj_p: *mut CModelObject,
-) {
-    static mut PREVIOUS_BONE_POS: Vec3 = Vec3 {
-        x: 0.0,
-        y: 0.0,
-        z: 0.0,
-    };
-
-    static mut CURRENT_BONE_POS: Vec3 = Vec3 {
-        x: 0.0,
-        y: 0.0,
-        z: 0.0,
-    };
-    static mut PREVIOUS_BONE_SCREEN_POS: Vec2 = Vec2 {
-        x: 0.0,
-        y: 0.0,
-    };
-
-    static mut CURRENT_BONE_SCREEN_POS: Vec2 = Vec2 {
-        x: 0.0,
-        y: 0.0,
-    };
-
-    for list in &*addr_of!(BONE_LIST) {
-        for id in list {
-            c_model_obj_p
-                .read()
-                .model_obj_p
-                .read()
-                .get_bone_joint_pos(addr_of_mut!(CURRENT_BONE_POS), *id as u8);
-
-            if PREVIOUS_BONE_POS.is_empty() {
-                PREVIOUS_BONE_POS = CURRENT_BONE_POS;
-                continue;
-            }
-
-            if ENGINE
-                .camera_manage_p
-                .read()
-                .camera_p
-                .read()
-                .world_to_screen(
-                    addr_of_mut!(PREVIOUS_BONE_SCREEN_POS),
-                    addr_of!(PREVIOUS_BONE_POS),
-                )
-                && ENGINE
-                    .camera_manage_p
-                    .read()
-                    .camera_p
-                    .read()
-                    .world_to_screen(
-                        addr_of_mut!(CURRENT_BONE_SCREEN_POS),
-                        addr_of!(CURRENT_BONE_POS),
-                    )
-            {
-                ui.get_background_draw_list()
-                    .add_line(
-                        [PREVIOUS_BONE_SCREEN_POS.x, PREVIOUS_BONE_SCREEN_POS.y],
-                        [CURRENT_BONE_SCREEN_POS.x, CURRENT_BONE_SCREEN_POS.y],
-                        color,
-                    )
-                    .thickness(1.5)
-                    .build();
-            }
-            PREVIOUS_BONE_POS = CURRENT_BONE_POS;
-            CURRENT_BONE_POS.reset();
-        }
-        PREVIOUS_BONE_POS.reset();
-    }
-}
+use std::collections::LinkedList;
 
 pub(crate) static mut 头部: std::collections::LinkedList<BoneID> = LinkedList::new();
 
@@ -123,21 +38,9 @@ pub(crate) unsafe fn init_bone_list() {
         BoneID::骨盆,
     ]);
 
-    左腿 = LinkedList::from([
-        BoneID::骨盆,
-        BoneID::左大腿,
-        BoneID::左小腿,
-        BoneID::左脚,
-        BoneID::左脚掌,
-    ]);
+    左腿 = LinkedList::from([BoneID::骨盆, BoneID::左大腿, BoneID::左小腿, BoneID::左脚]);
 
-    右腿 = LinkedList::from([
-        BoneID::骨盆,
-        BoneID::右大腿,
-        BoneID::右小腿,
-        BoneID::右脚,
-        BoneID::右脚掌,
-    ]);
+    右腿 = LinkedList::from([BoneID::骨盆, BoneID::右大腿, BoneID::右小腿, BoneID::右脚]);
 
     BONE_LIST.push_back(头部.clone());
     BONE_LIST.push_back(左肩.clone());
@@ -150,7 +53,7 @@ pub(crate) unsafe fn init_bone_list() {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd)]
-#[repr(u32)]
+#[repr(u8)]
 pub(crate) enum BoneID {
     骨盆 = 0,
     底脊柱,
@@ -159,7 +62,7 @@ pub(crate) enum BoneID {
     顶脊柱,
     下脖子,
     上脖子,
-    _虚空点,
+    _虚空脖子,
     头,
     _眼部相机,
     左锁骨,
@@ -176,6 +79,6 @@ pub(crate) enum BoneID {
     右小腿,
     左脚,
     右脚,
-    左脚掌,
-    右脚掌,
+    _左脚掌,
+    _右脚掌,
 }

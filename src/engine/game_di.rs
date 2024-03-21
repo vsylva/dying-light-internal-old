@@ -10,17 +10,16 @@ use crate::{engine::ENGINE_HANDLE, GetProcAddress};
 #[repr(C)]
 pub(crate) struct GameDI {
     __: [u8; 0x540],
-    pub(crate) session_p: *mut SessionCooperativeDI,
+    pub(crate) session_cooperative_di_p: *mut SessionCooperativeDI,
 }
 impl GameDI {
-    #[allow(unused)]
-    pub(crate) unsafe fn get_screen_width(&mut self) -> i32 {
+    pub(crate) unsafe fn _get_screen_width(&mut self) -> i32 {
         type GetScreenWidth = unsafe extern "system" fn(*mut GameDI) -> i32;
 
-        static mut PROC: isize = 0;
-        static mut PROC_PTR: *const GetScreenWidth = null();
+        pub(crate) static mut PROC: isize = 0;
+        pub(crate) static mut PROC_PTR: *const GetScreenWidth = null();
 
-        static ONCE: Once = Once::new();
+        pub(crate) static ONCE: Once = Once::new();
 
         ONCE.call_once(|| {
             PROC = GetProcAddress(
@@ -34,14 +33,13 @@ impl GameDI {
         (*PROC_PTR)(self)
     }
 
-    #[allow(unused)]
-    pub(crate) unsafe fn get_screen_height(&mut self) -> i32 {
+    pub(crate) unsafe fn _get_screen_height(&mut self) -> i32 {
         type GetScreenHeight = unsafe extern "system" fn(*mut GameDI) -> i32;
 
-        static mut PROC: isize = 0;
-        static mut PROC_PTR: *const GetScreenHeight = null();
+        pub(crate) static mut PROC: isize = 0;
+        pub(crate) static mut PROC_PTR: *const GetScreenHeight = null();
 
-        static ONCE: Once = Once::new();
+        pub(crate) static ONCE: Once = Once::new();
 
         ONCE.call_once(|| {
             PROC = GetProcAddress(
@@ -55,14 +53,13 @@ impl GameDI {
         (*PROC_PTR)(self)
     }
 
-    #[allow(unused)]
-    pub(crate) unsafe fn get_active_level_di(&mut self) -> *mut LevelDI {
+    pub(crate) unsafe fn _get_active_level_di(&mut self) -> *mut LevelDI {
         type GetActiveLevel = unsafe extern "system" fn(*mut GameDI) -> *mut LevelDI;
 
-        static mut PROC: isize = 0;
-        static mut PROC_PTR: *const GetActiveLevel = null();
+        pub(crate) static mut PROC: isize = 0;
+        pub(crate) static mut PROC_PTR: *const GetActiveLevel = null();
 
-        static ONCE: Once = Once::new();
+        pub(crate) static ONCE: Once = Once::new();
 
         ONCE.call_once(|| {
             PROC = GetProcAddress(
@@ -76,14 +73,13 @@ impl GameDI {
         (*PROC_PTR)(self)
     }
 
-    #[allow(unused)]
-    pub(crate) unsafe fn get_logical_level(&mut self) -> *mut LevelDI {
+    pub(crate) unsafe fn _get_logical_level(&mut self) -> *mut LevelDI {
         type GetLevelEditor = unsafe extern "system" fn(*mut GameDI) -> *mut LevelDI;
 
-        static mut PROC: isize = 0;
-        static mut PROC_PTR: *const GetLevelEditor = null();
+        pub(crate) static mut PROC: isize = 0;
+        pub(crate) static mut PROC_PTR: *const GetLevelEditor = null();
 
-        static ONCE: Once = Once::new();
+        pub(crate) static ONCE: Once = Once::new();
 
         ONCE.call_once(|| {
             PROC = GetProcAddress(

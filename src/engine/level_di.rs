@@ -10,18 +10,17 @@ use crate::{engine::ENGINE_HANDLE, GetProcAddress};
 #[repr(C)]
 pub(crate) struct LevelDI {
     __: [u8; 0x8],
-    pub(crate) level_p: *mut CLevel,
+    pub(crate) c_level_p: *mut CLevel,
 }
 
 impl LevelDI {
-    #[allow(unused)]
-    pub(crate) unsafe fn get_active_camera(&mut self, n: i32) -> *mut CBaseCamera {
+    pub(crate) unsafe fn _get_active_camera(&mut self, n: i32) -> *mut CBaseCamera {
         type GetActiveCamera = unsafe extern "system" fn(*mut LevelDI, i32) -> *mut CBaseCamera;
 
-        static mut PROC: isize = 0;
-        static mut PROC_PTR: *const GetActiveCamera = null();
+        pub(crate) static mut PROC: isize = 0;
+        pub(crate) static mut PROC_PTR: *const GetActiveCamera = null();
 
-        static ONCE: Once = Once::new();
+        pub(crate) static ONCE: Once = Once::new();
 
         ONCE.call_once(|| {
             PROC = GetProcAddress(
