@@ -1,3 +1,8 @@
+use std::ffi::c_void;
+
+use engine::{c_game::CGame, CGAME_P, ENGINE_HANDLE, ENGINE_SIZE};
+use render::RenderLoop;
+
 pub(crate) mod aim;
 pub(crate) mod engine;
 pub(crate) mod render;
@@ -10,11 +15,42 @@ unsafe extern "system" fn DllMain(
 ) -> i32 {
     if ul_reason_for_call == 1 {
         std::thread::spawn(move || unsafe {
-            engine::init();
-
             std::thread::sleep(std::time::Duration::from_secs(5));
+            // vcheat::alloc_console().unwrap();
 
-            render::init(h_module);
+            let module_engine_info = vcheat::internal::get_mod_info("engine_x64_rwdi.dll").unwrap();
+
+            ENGINE_HANDLE = module_engine_info.handle as *mut c_void;
+            ENGINE_SIZE = module_engine_info.size as usize;
+
+            let engine_data = vcheat::read_mem(
+                vcheat::internal::get_proc_handle(),
+                ENGINE_HANDLE,
+                ENGINE_SIZE,
+            )
+            .unwrap();
+
+            let cgame_p_offset = vcheat::pat_find(
+                "48 83 EC 50 48 8B 05 ?? ?? ?? ?? 49 8B F8 48 8B ??",
+                &engine_data,
+            )
+            .unwrap();
+
+            let cgame_p = ENGINE_HANDLE.byte_add(cgame_p_offset + 4);
+
+            CGAME_P = cgame_p
+                .byte_add(cgame_p.byte_add(3).cast::<u32>().read_unaligned() as usize + 7)
+                .cast::<*mut CGame>()
+                .read();
+
+            if let Err(_) = ::hudhook::Hudhook::builder()
+                .with::<hudhook::hooks::dx11::ImguiDx11Hooks>(RenderLoop)
+                .with_hmodule(hudhook::windows::Win32::Foundation::HINSTANCE(h_module))
+                .build()
+                .apply()
+            {
+                ::hudhook::eject();
+            }
         });
     } else if ul_reason_for_call == 0 {
     }
@@ -22,58 +58,52 @@ unsafe extern "system" fn DllMain(
     1
 }
 
-pub(crate) type HMODULE = isize;
-pub(crate) type PCSTR = *const u8;
-// pub(crate) type FARPROC = unsafe extern "system" fn() -> isize;
-pub(crate) type FARPROC = isize;
-pub(crate) type BOOL = i32;
+type HMODULE = isize;
+type PCSTR = *const u8;
+type FARPROC = isize;
+type BOOL = i32;
 
 #[link(name = "user32")]
 extern "system" {
-    pub(crate) fn GetAsyncKeyState(vKey: i32) -> u16;
+    fn GetAsyncKeyState(vKey: i32) -> u16;
     fn GetCursorPos(lppoint: *mut POINT) -> BOOL;
-
-    pub(crate) fn ScreenToClient(hwnd: isize, lppoint: *mut POINT) -> BOOL;
-    // pub(crate) fn IsIconic(hWnd: isize) -> i32;
-    pub(crate) fn FindWindowA(lpClassName: *const u8, lpWindowName: *const u8) -> isize;
+    fn ScreenToClient(hwnd: isize, lppoint: *mut POINT) -> BOOL;
+    fn FindWindowA(lpClassName: *const u8, lpWindowName: *const u8) -> isize;
 }
 
 #[link(name = "kernel32")]
 extern "system" {
-
-    pub(crate) fn GetProcAddress(hmodule: HMODULE, lpprocname: PCSTR) -> FARPROC;
-
-    // pub(crate) fn DisableThreadLibraryCalls(hlibmodule: HMODULE) -> BOOL;
+    fn GetProcAddress(hmodule: HMODULE, lpprocname: PCSTR) -> FARPROC;
 }
 
 #[derive(Debug, Clone, Copy, Default, PartialEq, PartialOrd)]
 #[repr(C)]
-pub struct POINT {
-    pub x: i32,
-    pub y: i32,
+struct POINT {
+    x: i32,
+    y: i32,
 }
 
 #[derive(Debug, Clone, Copy, Default, PartialEq, PartialOrd)]
 #[repr(C)]
-pub(crate) struct Vec2 {
-    pub(crate) x: f32,
-    pub(crate) y: f32,
+struct Vec2 {
+    x: f32,
+    y: f32,
 }
 
 #[derive(Debug, Clone, Copy, Default, PartialEq, PartialOrd)]
 #[repr(C)]
-pub(crate) struct Vec3 {
-    pub(crate) x: f32,
-    pub(crate) y: f32,
-    pub(crate) z: f32,
+struct Vec3 {
+    x: f32,
+    y: f32,
+    z: f32,
 }
 
 impl Vec3 {
-    pub(crate) unsafe fn is_empty(&self) -> bool {
+    unsafe fn is_empty(&self) -> bool {
         self.x == 0.0 && self.y == 0.0 && self.z == 0.0
     }
 
-    pub(crate) unsafe fn reset(&mut self) {
+    unsafe fn reset(&mut self) {
         self.x = 0.0;
         self.y = 0.0;
         self.z = 0.0;
@@ -82,13 +112,13 @@ impl Vec3 {
 
 #[derive(Debug, Clone, Copy, Default, PartialEq, PartialOrd)]
 #[repr(C)]
-pub(crate) struct Rotator {
-    pub(crate) yaw: f32,
-    pub(crate) pitch: f32,
-    pub(crate) roll: f32,
+struct Rotator {
+    yaw: f32,
+    pitch: f32,
+    roll: f32,
 }
 
-// pub(crate) unsafe fn is_dll_loaded(dll_name: &str, interval_sec: u64, end_sec: u64) -> bool {
+//  unsafe fn is_dll_loaded(dll_name: &str, interval_sec: u64, end_sec: u64) -> bool {
 //     let now = ::std::time::Instant::now();
 //     let dur = ::std::time::Duration::from_secs(interval_sec);
 
@@ -105,7 +135,7 @@ pub(crate) struct Rotator {
 //     false
 // }
 
-// pub(crate) unsafe fn debug_mode() {
+//  unsafe fn debug_mode() {
 //     use tracing_subscriber::{fmt, layer::SubscriberExt, util::SubscriberInitExt};
 
 //     vcheat::alloc_console().unwrap();
