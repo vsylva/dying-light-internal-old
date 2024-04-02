@@ -1,7 +1,5 @@
 use super::{
-    camera_manager_di::CameraManagerDI,
-    level_di::LevelDI,
-    local_client_di::LocalClientDI,
+    camera_manager_di::CameraManagerDI, level_di::LevelDI, local_client_di::LocalClientDI,
 };
 
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd)]

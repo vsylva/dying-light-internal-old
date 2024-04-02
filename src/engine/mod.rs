@@ -4,18 +4,10 @@ use std::{
 };
 
 use self::{
-    c_base_camera::CBaseCamera,
-    c_game::CGame,
-    c_level::CLevel,
-    c_model_object::CModelObject,
-    camera_fpp_di::CameraFPPDI,
-    camera_manager_di::CameraManagerDI,
-    game_di::GameDI,
-    inventory_ammo::InventoryAmmo,
-    inventory_container_di::InventoryContainerDI,
-    level_di::LevelDI,
-    local_client_di::LocalClientDI,
-    player_di::PlayerDI,
+    c_base_camera::CBaseCamera, c_game::CGame, c_level::CLevel, c_model_object::CModelObject,
+    camera_fpp_di::CameraFPPDI, camera_manager_di::CameraManagerDI, game_di::GameDI,
+    inventory_ammo::InventoryAmmo, inventory_container_di::InventoryContainerDI, level_di::LevelDI,
+    local_client_di::LocalClientDI, player_di::PlayerDI,
     session_cooperative_di::SessionCooperativeDI,
 };
 use crate::{Vec2, Vec3};
@@ -274,27 +266,21 @@ impl Engine {
         }
 
         match MODEL_NAME_ARRAY[0] {
-            "zombie" => {
-                match MODEL_NAME_ARRAY[1] {
-                    "voleteile" => self.model_type = ModelType::ZombieVoleteile,
-                    "spitter" => self.model_type = ModelType::ZombieSpecial,
-                    _ => self.model_type = ModelType::ZombieNormal,
-                }
-            }
+            "zombie" => match MODEL_NAME_ARRAY[1] {
+                "voleteile" => self.model_type = ModelType::ZombieVoleteile,
+                "spitter" => self.model_type = ModelType::ZombieSpecial,
+                _ => self.model_type = ModelType::ZombieNormal,
+            },
 
-            "survivor" => {
-                match MODEL_NAME_ARRAY[1] {
-                    "a" => self.model_type = ModelType::SurvivorHuman,
-                    _ => self.model_type = ModelType::SurvivorZombie,
-                }
-            }
+            "survivor" => match MODEL_NAME_ARRAY[1] {
+                "a" => self.model_type = ModelType::SurvivorHuman,
+                _ => self.model_type = ModelType::SurvivorZombie,
+            },
 
-            "player" => {
-                match MODEL_NAME_ARRAY[1] {
-                    "zombie" => self.model_type = ModelType::PlayerZombie,
-                    _ => self.model_type = ModelType::PlayerHuman,
-                }
-            }
+            "player" => match MODEL_NAME_ARRAY[1] {
+                "zombie" => self.model_type = ModelType::PlayerZombie,
+                _ => self.model_type = ModelType::PlayerHuman,
+            },
             _ => return false,
         };
 

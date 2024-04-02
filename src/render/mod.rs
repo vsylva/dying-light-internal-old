@@ -49,10 +49,7 @@ impl hudhook::ImguiRenderLoop for RenderLoop {
             background::frame(ui);
 
             if IS_SHOW_UI {
-                pub(crate) static mut MOUSE_POS: POINT = POINT {
-                    x: 0,
-                    y: 0,
-                };
+                pub(crate) static mut MOUSE_POS: POINT = POINT { x: 0, y: 0 };
 
                 GetCursorPos(addr_of_mut!(MOUSE_POS));
                 ScreenToClient(WINDOW, addr_of_mut!(MOUSE_POS));

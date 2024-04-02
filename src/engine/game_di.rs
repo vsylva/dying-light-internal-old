@@ -4,7 +4,7 @@ use std::{
 };
 
 use super::{level_di::LevelDI, session_cooperative_di::SessionCooperativeDI};
-use crate::{engine::ENGINE_HANDLE, GetProcAddress};
+use crate::engine::ENGINE_HANDLE;
 
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd)]
 #[repr(C)]
@@ -22,10 +22,9 @@ impl GameDI {
         pub(crate) static ONCE: Once = Once::new();
 
         ONCE.call_once(|| {
-            PROC = GetProcAddress(
-                ENGINE_HANDLE as isize,
-                "?GetScreenWidth@IGame@@QEAAHXZ\0".as_ptr(),
-            );
+            PROC =
+                vcheat::get_proc_address(ENGINE_HANDLE as isize, "?GetScreenWidth@IGame@@QEAAHXZ")
+                    .unwrap();
 
             PROC_PTR = addr_of!(PROC) as *const GetScreenWidth;
         });
@@ -42,10 +41,9 @@ impl GameDI {
         pub(crate) static ONCE: Once = Once::new();
 
         ONCE.call_once(|| {
-            PROC = GetProcAddress(
-                ENGINE_HANDLE as isize,
-                "?GetScreenHeight@IGame@@QEAAHXZ\0".as_ptr(),
-            );
+            PROC =
+                vcheat::get_proc_address(ENGINE_HANDLE as isize, "?GetScreenHeight@IGame@@QEAAHXZ")
+                    .unwrap();
 
             PROC_PTR = addr_of!(PROC) as *const GetScreenHeight;
         });
@@ -62,10 +60,11 @@ impl GameDI {
         pub(crate) static ONCE: Once = Once::new();
 
         ONCE.call_once(|| {
-            PROC = GetProcAddress(
+            PROC = vcheat::get_proc_address(
                 ENGINE_HANDLE as isize,
-                "?GetActiveLevel@IGame@@QEAAPEAVILevel@@XZ\0".as_ptr(),
-            );
+                "?GetActiveLevel@IGame@@QEAAPEAVILevel@@XZ",
+            )
+            .unwrap();
 
             PROC_PTR = addr_of!(PROC) as *const GetActiveLevel;
         });
@@ -82,10 +81,11 @@ impl GameDI {
         pub(crate) static ONCE: Once = Once::new();
 
         ONCE.call_once(|| {
-            PROC = GetProcAddress(
+            PROC = vcheat::get_proc_address(
                 ENGINE_HANDLE as isize,
-                "?GetLevelEditor@IGame@@UEAAPEAVILevel@@XZ\0".as_ptr(),
-            );
+                "?GetLevelEditor@IGame@@UEAAPEAVILevel@@XZ",
+            )
+            .unwrap();
 
             PROC_PTR = addr_of!(PROC) as *const GetLevelEditor;
         });

@@ -4,7 +4,7 @@ use std::{
 };
 
 use super::{c_base_camera::CBaseCamera, c_level::CLevel};
-use crate::{engine::ENGINE_HANDLE, GetProcAddress};
+use crate::engine::ENGINE_HANDLE;
 
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd)]
 #[repr(C)]
@@ -23,10 +23,12 @@ impl LevelDI {
         pub(crate) static ONCE: Once = Once::new();
 
         ONCE.call_once(|| {
-            PROC = GetProcAddress(
+            PROC = vcheat::get_proc_address(
                 ENGINE_HANDLE as isize,
-                "?GetActiveCamera@ILevel@@QEBAPEAVIBaseCamera@@XZ\0".as_ptr(),
-            );
+                "?GetActiveCamera@ILevel@@QEBAPEAVIBaseCamera@@XZ",
+            )
+            .unwrap();
+
             PROC_PTR = addr_of!(PROC) as *const GetActiveCamera;
         });
 

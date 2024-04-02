@@ -4,7 +4,7 @@ use std::{
 };
 
 use super::c_base_camera::CBaseCamera;
-use crate::{engine::ENGINE_HANDLE, GetProcAddress, Vec2, Vec3};
+use crate::{engine::ENGINE_HANDLE, Vec2, Vec3};
 
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd)]
 #[repr(C)]
@@ -27,10 +27,11 @@ impl CameraFPPDI {
         pub(crate) static ONCE: Once = Once::new();
 
         ONCE.call_once(|| {
-            PROC = GetProcAddress(
+            PROC = vcheat::get_proc_address(
                 ENGINE_HANDLE as isize,
-                "?PointToScreenClampToFrustum@IBaseCamera@@QEAA?BVvec3@@AEBV2@@Z\0".as_ptr(),
-            );
+                "?PointToScreenClampToFrustum@IBaseCamera@@QEAA?BVvec3@@AEBV2@@Z",
+            )
+            .unwrap();
 
             PROC_PTR = addr_of!(PROC) as *const PointToScreenClampToFrustum;
         });
@@ -52,10 +53,11 @@ impl CameraFPPDI {
         pub(crate) static ONCE: Once = Once::new();
 
         ONCE.call_once(|| {
-            PROC = GetProcAddress(
+            PROC = vcheat::get_proc_address(
                 ENGINE_HANDLE as isize,
-                "?PointToScreen@IBaseCamera@@QEAA?BVvec2@@AEBVvec3@@@Z\0".as_ptr(),
-            );
+                "?PointToScreen@IBaseCamera@@QEAA?BVvec2@@AEBVvec3@@@Z",
+            )
+            .unwrap();
 
             PROC_PTR = addr_of!(PROC) as *const PointToScreen;
         });
@@ -72,10 +74,8 @@ impl CameraFPPDI {
         pub(crate) static ONCE: Once = Once::new();
 
         ONCE.call_once(|| {
-            PROC = GetProcAddress(
-                ENGINE_HANDLE as isize,
-                "?GetFOV@IBaseCamera@@QEAAMXZ\0".as_ptr(),
-            );
+            PROC = vcheat::get_proc_address(ENGINE_HANDLE as isize, "?GetFOV@IBaseCamera@@QEAAMXZ")
+                .unwrap();
 
             PROC_PTR = addr_of!(PROC) as *const GetFov;
         });
@@ -92,10 +92,11 @@ impl CameraFPPDI {
         pub(crate) static ONCE: Once = Once::new();
 
         ONCE.call_once(|| {
-            PROC = GetProcAddress(
+            PROC = vcheat::get_proc_address(
                 ENGINE_HANDLE as isize,
-                "?GetPosition@IBaseCamera@@QEBA?BVvec3@@XZ\0".as_ptr(),
-            );
+                "?GetPosition@IBaseCamera@@QEBA?BVvec3@@XZ",
+            )
+            .unwrap();
 
             PROC_PTR = addr_of!(PROC) as *const GetPosition;
         });

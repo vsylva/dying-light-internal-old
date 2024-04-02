@@ -57,9 +57,6 @@ unsafe extern "system" fn DllMain(
     1
 }
 
-type HMODULE = isize;
-type PCSTR = *const u8;
-type FARPROC = isize;
 type BOOL = i32;
 
 #[link(name = "user32")]
@@ -68,11 +65,6 @@ extern "system" {
     fn GetCursorPos(lppoint: *mut POINT) -> BOOL;
     fn ScreenToClient(hwnd: isize, lppoint: *mut POINT) -> BOOL;
     fn FindWindowA(lpClassName: *const u8, lpWindowName: *const u8) -> isize;
-}
-
-#[link(name = "kernel32")]
-extern "system" {
-    fn GetProcAddress(hmodule: HMODULE, lpprocname: PCSTR) -> FARPROC;
 }
 
 #[derive(Debug, Clone, Copy, Default, PartialEq, PartialOrd)]

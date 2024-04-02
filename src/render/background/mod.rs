@@ -4,20 +4,14 @@ use std::ptr::{addr_of, addr_of_mut, null};
 
 use hudhook::imgui::ImColor32;
 
-pub(crate) static mut OBJ_HEAD_SCREEN_POS: Vec2 = Vec2 {
-    x: 0.0,
-    y: 0.0,
-};
+pub(crate) static mut OBJ_HEAD_SCREEN_POS: Vec2 = Vec2 { x: 0.0, y: 0.0 };
 pub(crate) static mut OBJ_HEAD_WORLD_POS: Vec3 = Vec3 {
     x: 0.0,
     y: 0.0,
     z: 0.0,
 };
 
-pub(crate) static mut OBJ_FOOT_SCREEN_POS: Vec2 = Vec2 {
-    x: 0.0,
-    y: 0.0,
-};
+pub(crate) static mut OBJ_FOOT_SCREEN_POS: Vec2 = Vec2 { x: 0.0, y: 0.0 };
 
 pub(crate) static mut OBJ_FOOT_WORLD_POS: Vec3 = Vec3 {
     x: 0.0,
@@ -37,13 +31,9 @@ use crate::{
     engine::{ModelType, CGAME_P, ENGINE},
     render::{
         background::bone::{BoneID, BONE_LIST},
-        menu,
-        COLOR_PINK,
-        COLOR_WHITE,
+        menu, COLOR_PINK, COLOR_WHITE,
     },
-    GetAsyncKeyState,
-    Vec2,
-    Vec3,
+    GetAsyncKeyState, Vec2, Vec3,
 };
 
 pub(crate) unsafe fn frame(ui: &hudhook::imgui::Ui) {
@@ -261,15 +251,9 @@ unsafe fn bone(ui: &hudhook::imgui::Ui, color: ImColor32) {
         y: 0.0,
         z: 0.0,
     };
-    pub(crate) static mut PREVIOUS_BONE_SCREEN_POS: Vec2 = Vec2 {
-        x: 0.0,
-        y: 0.0,
-    };
+    pub(crate) static mut PREVIOUS_BONE_SCREEN_POS: Vec2 = Vec2 { x: 0.0, y: 0.0 };
 
-    pub(crate) static mut CURRENT_BONE_SCREEN_POS: Vec2 = Vec2 {
-        x: 0.0,
-        y: 0.0,
-    };
+    pub(crate) static mut CURRENT_BONE_SCREEN_POS: Vec2 = Vec2 { x: 0.0, y: 0.0 };
 
     for list in &*addr_of!(BONE_LIST) {
         for id in list {

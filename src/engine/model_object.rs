@@ -3,7 +3,7 @@ use std::{
     sync::Once,
 };
 
-use crate::{engine::ENGINE_HANDLE, GetProcAddress, Vec3};
+use crate::{engine::ENGINE_HANDLE, Vec3};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 #[repr(C)]
@@ -40,10 +40,12 @@ impl ModelObject {
         pub(crate) static ONCE: Once = Once::new();
 
         ONCE.call_once(|| {
-            PROC = GetProcAddress(
+            PROC = vcheat::get_proc_address(
                 ENGINE_HANDLE as isize,
-                "?GetWorldPosition@IControlObject@@QEBA?AVvec3@@XZ\0".as_ptr(),
-            );
+                "?GetWorldPosition@IControlObject@@QEBA?AVvec3@@XZ",
+            )
+            .unwrap();
+
             PROC_PTR = addr_of!(PROC) as *const GetWorldPosition;
         });
 
@@ -59,10 +61,12 @@ impl ModelObject {
         pub(crate) static ONCE: Once = Once::new();
 
         ONCE.call_once(|| {
-            PROC = GetProcAddress(
+            PROC = vcheat::get_proc_address(
                 ENGINE_HANDLE as isize,
-                "?GetDistanceTo@IControlObject@@QEBAMAEBVvec3@@@Z\0".as_ptr(),
-            );
+                "?GetDistanceTo@IControlObject@@QEBAMAEBVvec3@@@Z",
+            )
+            .unwrap();
+
             PROC_PTR = addr_of!(PROC) as *const GetDistanceTo;
         });
 
@@ -84,10 +88,12 @@ impl ModelObject {
         pub(crate) static ONCE: Once = Once::new();
 
         ONCE.call_once(|| {
-            PROC = GetProcAddress(
+            PROC = vcheat::get_proc_address(
                 ENGINE_HANDLE as isize,
-                "?RaytestToTarget@IControlObject@@QEAA_NPEBV1@AEBVvec3@@1E@Z\0".as_ptr(),
-            );
+                "?RaytestToTarget@IControlObject@@QEAA_NPEBV1@AEBVvec3@@1E@Z",
+            )
+            .unwrap();
+
             PROC_PTR = addr_of!(PROC) as *const RaytestToTarget;
         });
 
@@ -109,10 +115,11 @@ impl ModelObject {
         pub(crate) static ONCE: Once = Once::new();
 
         ONCE.call_once(|| {
-            PROC = GetProcAddress(
+            PROC = vcheat::get_proc_address(
                 ENGINE_HANDLE as isize,
-                "?GetBoneJointPos@IModelObject@@QEBA?AVvec3@@E@Z\0".as_ptr(),
-            );
+                "?GetBoneJointPos@IModelObject@@QEBA?AVvec3@@E@Z",
+            )
+            .unwrap();
 
             PROC_PTR = addr_of!(PROC) as *const GetBoneJointPos;
         });
