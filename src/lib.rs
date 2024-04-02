@@ -16,12 +16,11 @@ unsafe extern "system" fn DllMain(
     if ul_reason_for_call == 1 {
         std::thread::spawn(move || unsafe {
             std::thread::sleep(std::time::Duration::from_secs(5));
-            // vcheat::alloc_console().unwrap();
 
-            let module_engine_info = vcheat::internal::get_mod_info("engine_x64_rwdi.dll").unwrap();
+            let engine_info = vcheat::internal::get_mod_info("engine_x64_rwdi.dll").unwrap();
 
-            ENGINE_HANDLE = module_engine_info.handle as *mut c_void;
-            ENGINE_SIZE = module_engine_info.size as usize;
+            ENGINE_HANDLE = engine_info.handle as *mut c_void;
+            ENGINE_SIZE = engine_info.size as usize;
 
             let engine_data = vcheat::read_mem(
                 vcheat::internal::get_proc_handle(),
@@ -31,7 +30,7 @@ unsafe extern "system" fn DllMain(
             .unwrap();
 
             let cgame_p_offset = vcheat::pat_find(
-                "48 83 EC 50 48 8B 05 ?? ?? ?? ?? 49 8B F8 48 8B ??",
+                "48 83 EC 50 48 8B 05 ?? ?? ?? ?? 49 8B F8 48 8B",
                 &engine_data,
             )
             .unwrap();
