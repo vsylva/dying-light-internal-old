@@ -9,5 +9,5 @@ publish = false
 crate-type = ["cdylib"]
 
 [dependencies]
-vcheat = "=0.6.3"
-hudhook = "=0.6.4"
+vcheat = "=0.6.4"
+hudhook = { rev = "f058304", git = "https://github.com/veeenu/hudhook.git" }
