@@ -2,7 +2,7 @@ pub(crate) mod bone;
 
 use std::ptr::{addr_of, addr_of_mut, null};
 
-use hudhook::imgui::ImColor32;
+use hudhook_mini::imgui::ImColor32;
 
 pub(crate) static mut OBJ_HEAD_SCREEN_POS: Vec2 = Vec2 { x: 0.0, y: 0.0 };
 pub(crate) static mut OBJ_HEAD_WORLD_POS: Vec3 = Vec3 {
@@ -36,7 +36,7 @@ use crate::{
     GetAsyncKeyState, Vec2, Vec3,
 };
 
-pub(crate) unsafe fn frame(ui: &hudhook::imgui::Ui) {
+pub(crate) unsafe fn frame(ui: &hudhook_mini::imgui::Ui) {
     if !ENGINE.get_ptr() {
         return;
     }
@@ -89,7 +89,7 @@ pub(crate) unsafe fn frame(ui: &hudhook::imgui::Ui) {
     }
 }
 
-unsafe fn main(ui: &hudhook::imgui::Ui) {
+unsafe fn main(ui: &hudhook_mini::imgui::Ui) {
     // 获取头部世界坐标
     ENGINE.get_bone_joint_pos(addr_of_mut!(OBJ_HEAD_WORLD_POS), BoneID::头 as u8);
 
@@ -239,7 +239,7 @@ unsafe fn aim_range() {
     }
 }
 
-unsafe fn bone(ui: &hudhook::imgui::Ui, color: ImColor32) {
+unsafe fn bone(ui: &hudhook_mini::imgui::Ui, color: ImColor32) {
     pub(crate) static mut PREVIOUS_BONE_POS: Vec3 = Vec3 {
         x: 0.0,
         y: 0.0,

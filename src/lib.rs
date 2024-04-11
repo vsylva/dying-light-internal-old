@@ -42,13 +42,13 @@ unsafe extern "system" fn DllMain(
                 .cast::<*mut CGame>()
                 .read();
 
-            if let Err(_) = ::hudhook::Hudhook::builder()
-                .with::<hudhook::hooks::dx11::ImguiDx11Hooks>(RenderLoop)
-                .with_hmodule(hudhook::windows::Win32::Foundation::HINSTANCE(h_module))
+            if let Err(_) = ::hudhook_mini::Hudhook::builder()
+                .with::<hudhook_mini::hooks::dx11::ImguiDx11Hooks>(RenderLoop)
+                .with_hmodule(hudhook_mini::windows::Win32::Foundation::HINSTANCE(h_module))
                 .build()
                 .apply()
             {
-                ::hudhook::eject();
+                ::hudhook_mini::eject();
             }
         });
     } else if ul_reason_for_call == 0 {
@@ -134,7 +134,7 @@ struct Rotator {
 
 //     std::env::set_var("RUST_LOG", "trace");
 
-//     let log_file = hudhook::util::get_dll_path()
+//     let log_file = hudhook_mini::util::get_dll_path()
 //         .map(|mut path| {
 //             path.set_extension("txt");
 //             path

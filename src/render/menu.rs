@@ -13,17 +13,17 @@ pub(crate) static mut AIM_RANGE_CIRCLE_SWITCH: bool = false;
 pub(crate) static mut LOCK_AMMO_SWITCH: bool = false;
 pub(crate) static mut LOCK_HP_SWITCH: bool = false;
 
-pub(crate) unsafe fn frame(ui: &hudhook::imgui::Ui) {
+pub(crate) unsafe fn frame(ui: &hudhook_mini::imgui::Ui) {
     ui.window(format!("消逝的光芒内部(DLInternal)"))
         .title_bar(true)
-        .size([500.0, 400.0], hudhook::imgui::Condition::FirstUseEver)
+        .size([500.0, 400.0], hudhook_mini::imgui::Condition::FirstUseEver)
         .resizable(true)
         .collapsible(true)
         .movable(true)
         .opened(&mut *addr_of_mut!(IS_SHOW_UI))
         .build(|| main(ui));
 }
-unsafe fn main(ui: &hudhook::imgui::Ui) {
+unsafe fn main(ui: &hudhook_mini::imgui::Ui) {
     ui.text("按 ~ 打开/关闭菜单(Press ~ to open/close Menu)");
     ui.separator();
 

@@ -3,7 +3,7 @@ mod menu;
 
 use std::ptr::{addr_of_mut, null};
 
-use hudhook::imgui::ImColor32;
+use hudhook_mini::imgui::ImColor32;
 
 use self::background::bone::init_bone_list;
 use crate::{FindWindowA, GetAsyncKeyState, GetCursorPos, ScreenToClient, POINT};
@@ -11,25 +11,25 @@ use crate::{FindWindowA, GetAsyncKeyState, GetCursorPos, ScreenToClient, POINT};
 pub(crate) static mut IS_SHOW_UI: bool = true;
 pub(crate) static mut WINDOW: isize = 0;
 
-const COLOR_RED: ImColor32 = hudhook::imgui::ImColor32::from_rgb(255, 0, 0);
+const COLOR_RED: ImColor32 = hudhook_mini::imgui::ImColor32::from_rgb(255, 0, 0);
 
-const COLOR_PURPLE: ImColor32 = hudhook::imgui::ImColor32::from_rgb(102, 0, 153);
+const COLOR_PURPLE: ImColor32 = hudhook_mini::imgui::ImColor32::from_rgb(102, 0, 153);
 
-const COLOR_BLUE: ImColor32 = hudhook::imgui::ImColor32::from_rgb(0, 0, 255);
+const COLOR_BLUE: ImColor32 = hudhook_mini::imgui::ImColor32::from_rgb(0, 0, 255);
 
-const COLOR_GREEN: ImColor32 = hudhook::imgui::ImColor32::from_rgb(0, 255, 0);
+const COLOR_GREEN: ImColor32 = hudhook_mini::imgui::ImColor32::from_rgb(0, 255, 0);
 
-const COLOR_PINK: ImColor32 = hudhook::imgui::ImColor32::from_rgb(255, 192, 103);
+const COLOR_PINK: ImColor32 = hudhook_mini::imgui::ImColor32::from_rgb(255, 192, 103);
 
-const COLOR_WHITE: ImColor32 = hudhook::imgui::ImColor32::from_rgb(255, 255, 255);
+const COLOR_WHITE: ImColor32 = hudhook_mini::imgui::ImColor32::from_rgb(255, 255, 255);
 
 pub(crate) struct RenderLoop;
 
-impl hudhook::ImguiRenderLoop for RenderLoop {
+impl hudhook_mini::ImguiRenderLoop for RenderLoop {
     fn initialize<'a>(
         &'a mut self,
-        _ctx: &mut hudhook::imgui::Context,
-        _loader: hudhook::TextureLoader<'a>,
+        _ctx: &mut hudhook_mini::imgui::Context,
+        _render_context: &'a mut dyn hudhook_mini::RenderContext,
     ) {
         unsafe {
             set_font(_ctx, 20.0);
@@ -40,7 +40,7 @@ impl hudhook::ImguiRenderLoop for RenderLoop {
         }
     }
 
-    fn render(&mut self, ui: &mut hudhook::imgui::Ui) {
+    fn render(&mut self, ui: &mut hudhook_mini::imgui::Ui) {
         unsafe {
             if is_key_down_once(0xC0) {
                 IS_SHOW_UI = !IS_SHOW_UI;
@@ -54,17 +54,17 @@ impl hudhook::ImguiRenderLoop for RenderLoop {
                 GetCursorPos(addr_of_mut!(MOUSE_POS));
                 ScreenToClient(WINDOW, addr_of_mut!(MOUSE_POS));
 
-                (*hudhook::imgui::sys::igGetIO()).MousePos.x = MOUSE_POS.x as f32;
-                (*hudhook::imgui::sys::igGetIO()).MousePos.y = MOUSE_POS.y as f32;
-                (*hudhook::imgui::sys::igGetIO()).MouseDrawCursor = true;
+                (*hudhook_mini::imgui::sys::igGetIO()).MousePos.x = MOUSE_POS.x as f32;
+                (*hudhook_mini::imgui::sys::igGetIO()).MousePos.y = MOUSE_POS.y as f32;
+                (*hudhook_mini::imgui::sys::igGetIO()).MouseDrawCursor = true;
 
                 if GetAsyncKeyState(0x1) != 0 {
-                    (*hudhook::imgui::sys::igGetIO()).MouseDown[0] = true;
+                    (*hudhook_mini::imgui::sys::igGetIO()).MouseDown[0] = true;
                 } else {
-                    (*hudhook::imgui::sys::igGetIO()).MouseDown[0] = false;
+                    (*hudhook_mini::imgui::sys::igGetIO()).MouseDown[0] = false;
                 }
             } else {
-                (*hudhook::imgui::sys::igGetIO()).MouseDrawCursor = false;
+                (*hudhook_mini::imgui::sys::igGetIO()).MouseDrawCursor = false;
                 return;
             }
 
@@ -73,18 +73,18 @@ impl hudhook::ImguiRenderLoop for RenderLoop {
     }
 }
 
-fn set_font(ctx: &mut hudhook::imgui::Context, font_size: f32) {
-    let tf_data = hudhook::imgui::FontSource::TtfData {
+fn set_font(ctx: &mut hudhook_mini::imgui::Context, font_size: f32) {
+    let tf_data = hudhook_mini::imgui::FontSource::TtfData {
         data: include_bytes!("../../res/FZHTJW.TTF"),
         size_pixels: font_size,
-        config: Some(hudhook::imgui::FontConfig {
+        config: Some(hudhook_mini::imgui::FontConfig {
             size_pixels: font_size,
             pixel_snap_h: true,
-            glyph_ranges: hudhook::imgui::FontGlyphRanges::from_slice(&[
+            glyph_ranges: hudhook_mini::imgui::FontGlyphRanges::from_slice(&[
                 0x0020, 0x00FF, 0x2000, 0x206F, 0x3000, 0x30FF, 0x31F0, 0x31FF, 0xFF00, 0xFFEF,
                 0xFFFD, 0xFFFD, 0x4E00, 0x9FAF, 0,
             ]),
-            ..hudhook::imgui::FontConfig::default()
+            ..hudhook_mini::imgui::FontConfig::default()
         }),
     };
 
