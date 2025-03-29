@@ -2,9 +2,7 @@
 
 ![menu](res/menu.png)
 
-## 下载/Download
-
-https://github.com/vSylva/dying_light_hack/releases
+依赖缺失，暂不可编译
 
 ## 使用方式
 
